@@ -21,20 +21,20 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
--- Name: comment; Type: TABLE; Schema: public; Owner: postgres
+-- Name: comments; Type: TABLE; Schema: public; Owner: postgres
 --
 
-CREATE TABLE public.comment (
+CREATE TABLE public.comments (
     comment_id integer NOT NULL,
     place_id smallint NOT NULL,
     content character varying,
-    start smallint NOT NULL,
+    stars smallint NOT NULL,
     rant boolean,
     author character varying
 );
 
 
-ALTER TABLE public.comment OWNER TO postgres;
+ALTER TABLE public.comments OWNER TO postgres;
 
 --
 -- Name: comment_comment_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -55,24 +55,24 @@ ALTER TABLE public.comment_comment_id_seq OWNER TO postgres;
 -- Name: comment_comment_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
-ALTER SEQUENCE public.comment_comment_id_seq OWNED BY public.comment.comment_id;
+ALTER SEQUENCE public.comment_comment_id_seq OWNED BY public.comments.comment_id;
 
 
 --
--- Name: place; Type: TABLE; Schema: public; Owner: postgres
+-- Name: places; Type: TABLE; Schema: public; Owner: postgres
 --
 
-CREATE TABLE public.place (
+CREATE TABLE public.places (
     place_id integer NOT NULL,
-    place_name character varying NOT NULL,
+    name character varying NOT NULL,
     state character varying,
     cuisines character varying NOT NULL,
     pic character varying,
-    founded smallint[]
+    founded integer
 );
 
 
-ALTER TABLE public.place OWNER TO postgres;
+ALTER TABLE public.places OWNER TO postgres;
 
 --
 -- Name: place_place_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -93,39 +93,46 @@ ALTER TABLE public.place_place_id_seq OWNER TO postgres;
 -- Name: place_place_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
-ALTER SEQUENCE public.place_place_id_seq OWNED BY public.place.place_id;
+ALTER SEQUENCE public.place_place_id_seq OWNED BY public.places.place_id;
 
 
 --
--- Name: comment comment_id; Type: DEFAULT; Schema: public; Owner: postgres
+-- Name: comments comment_id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public.comment ALTER COLUMN comment_id SET DEFAULT nextval('public.comment_comment_id_seq'::regclass);
-
-
---
--- Name: place place_id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.place ALTER COLUMN place_id SET DEFAULT nextval('public.place_place_id_seq'::regclass);
+ALTER TABLE ONLY public.comments ALTER COLUMN comment_id SET DEFAULT nextval('public.comment_comment_id_seq'::regclass);
 
 
 --
--- Data for Name: comment; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Name: places place_id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
-COPY public.comment (comment_id, place_id, content, start, rant, author) FROM stdin;
+ALTER TABLE ONLY public.places ALTER COLUMN place_id SET DEFAULT nextval('public.place_place_id_seq'::regclass);
+
+
+--
+-- Data for Name: comments; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.comments (comment_id, place_id, content, stars, rant, author) FROM stdin;
+1	2	The best BBS spot!	5	t	Rochelle
+5	2	The best BBS spot!	5	t	Rochelle
+6	5	Took for ever to get food!	1	f	Ajoy
+4	5	Great food!	4	t	Mike
+7	5	Great food!	4	t	Mike
 \.
 
 
 --
--- Data for Name: place; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: places; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.place (place_id, place_name, state, cuisines, pic, founded) FROM stdin;
-1	Ornelles	\N	BBQ	\N	\N
-2	Olive Garden	\N	Italian	\N	\N
-3	Thai Bistro	\N	Thai	\N	\N
+COPY public.places (place_id, name, state, cuisines, pic, founded) FROM stdin;
+2	River House	\N	Seafood	https://images.unsplash.com/photo-1562158079-e4b9ed06b62d?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=750&q=80	2000
+3	Ornelles	\N	BBQ	\N	\N
+4	Olive Garden	FL	Italian	\N	1982
+5	Chipotle	\N	Mexican	\N	\N
+6	La Rosa	FL	Italian	\N	2014
 \.
 
 
@@ -133,40 +140,42 @@ COPY public.place (place_id, place_name, state, cuisines, pic, founded) FROM std
 -- Name: comment_comment_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.comment_comment_id_seq', 1, false);
+SELECT pg_catalog.setval('public.comment_comment_id_seq', 7, true);
 
 
 --
 -- Name: place_place_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.place_place_id_seq', 1, false);
+SELECT pg_catalog.setval('public.place_place_id_seq', 6, true);
 
 
 --
--- Name: comment comment_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: comments comment_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public.comment
+ALTER TABLE ONLY public.comments
     ADD CONSTRAINT comment_pkey PRIMARY KEY (comment_id);
 
 
 --
--- Name: place place_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: places place_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public.place
+ALTER TABLE ONLY public.places
     ADD CONSTRAINT place_pkey PRIMARY KEY (place_id);
 
 
 --
--- Name: comment comment_place_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: comments comment_place_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public.comment
-    ADD CONSTRAINT comment_place_id_fkey FOREIGN KEY (place_id) REFERENCES public.place(place_id);
+ALTER TABLE ONLY public.comments
+    ADD CONSTRAINT comment_place_id_fkey FOREIGN KEY (place_id) REFERENCES public.places(place_id);
 
 
 --
 -- PostgreSQL database dump complete
 --
+
+
