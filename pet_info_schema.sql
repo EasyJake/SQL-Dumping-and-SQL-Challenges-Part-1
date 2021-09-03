@@ -37,3 +37,6 @@ ALTER TABLE public.pets OWNER TO postgres;
 --
 -- PostgreSQL database dump complete
 --
+
+-- Dumping schema:
+-- pg_dump -s pet_info > pet_info_schema.sql
